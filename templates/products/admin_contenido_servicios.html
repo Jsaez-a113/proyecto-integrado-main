@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Servicios Terapéuticos - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-edit"></i> Editar Contenido: Servicios Terapéuticos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Nota:</strong> Esta página edita el contenido general (título, subtítulo y mensaje de agenda). 
+                        Para gestionar los bloques de servicios individuales, 
+                        <a href="{% url 'admin_servicios_lista' %}" class="alert-link btn btn-sm btn-outline-info">
+                            <i class="fas fa-list"></i> Gestionar Bloques de Servicios
+                        </a>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título Principal</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" 
+                                   value="{{ contenido.titulo }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subtitulo" class="form-label">Subtítulo</label>
+                            <input type="text" class="form-control" id="subtitulo" name="subtitulo" 
+                                   value="{{ contenido.subtitulo }}">
+                        </div>
+                        
+                        <hr>
+                        
+                        <h5 class="mb-3">Mensaje de Agenda</h5>
+                        <div class="mb-3">
+                            <label for="mensaje_agenda_titulo" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="mensaje_agenda_titulo" name="mensaje_agenda_titulo" 
+                                   value="{{ contenido.mensaje_agenda_titulo }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="mensaje_agenda_texto" class="form-label">Texto</label>
+                            <textarea class="form-control" id="mensaje_agenda_texto" name="mensaje_agenda_texto" rows="4">{{ contenido.mensaje_agenda_texto }}</textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'admin_panel' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

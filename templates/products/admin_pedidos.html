@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Pedidos - Administración - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>
+                    <i class="fas fa-shopping-cart text-primary"></i> Gestión de Pedidos
+                </h1>
+                <a href="{% url 'admin_panel' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Panel
+                </a>
+            </div>
+            
+            <!-- Filtros de estado -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        <a href="?status=pending" class="btn {% if status_actual == 'pending' %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                            <i class="fas fa-clock"></i> Pendientes
+                        </a>
+                        <a href="?status=confirmed" class="btn {% if status_actual == 'confirmed' %}btn-info{% else %}btn-outline-info{% endif %}">
+                            <i class="fas fa-check-circle"></i> Confirmados
+                        </a>
+                        <a href="?status=completed" class="btn {% if status_actual == 'completed' %}btn-success{% else %}btn-outline-success{% endif %}">
+                            <i class="fas fa-check-double"></i> Completados
+                        </a>
+                        <a href="?status=cancelled" class="btn {% if status_actual == 'cancelled' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                            <i class="fas fa-times-circle"></i> Cancelados
+                        </a>
+                        <a href="?status=all" class="btn {% if status_actual == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            <i class="fas fa-list"></i> Todos
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lista de pedidos -->
+            {% if pedidos_con_info %}
+                <div class="row justify-content-center">
+                    {% for info in pedidos_con_info %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow h-100">
+                                <div class="card-header {% if info.pedido.status == 'pending' %}bg-warning{% elif info.pedido.status == 'confirmed' %}bg-info{% elif info.pedido.status == 'completed' %}bg-success{% else %}bg-danger{% endif %} text-white">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-shopping-bag"></i> Pedido #{{ info.pedido.id }}
+                                        </h5>
+                                        <span class="badge bg-light text-dark">{{ info.pedido.get_status_display }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Información del usuario -->
+                                    <div class="mb-3">
+                                        <h6 class="text-muted mb-2">
+                                            <i class="fas fa-user"></i> Información del Cliente
+                                        </h6>
+                                        <p class="mb-1"><strong>Nombre:</strong> {{ info.pedido.user.get_full_name|default:info.pedido.user.username }}</p>
+                                        <p class="mb-1"><strong>Usuario:</strong> {{ info.pedido.user.username }}</p>
+                                        <p class="mb-1"><strong>Email:</strong> {{ info.pedido.user.email }}</p>
+                                        <p class="mb-0"><strong>Teléfono:</strong> {{ info.telefono }}</p>
+                                    </div>
+                                    
+                                    <hr>
+                                    
+                                    <!-- Productos del pedido -->
+                                    <div class="mb-3">
+                                        <h6 class="text-muted mb-2">
+                                            <i class="fas fa-box"></i> Productos
+                                        </h6>
+                                        <ul class="list-unstyled">
+                                            {% for item in info.items %}
+                                                <li class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>{{ item.product_name }}</span>
+                                                        <span class="text-muted">x{{ item.quantity }}</span>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <small class="text-muted">${{ item.product_price }} c/u</small>
+                                                        <strong class="ms-2">${{ item.get_total }}</strong>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    
+                                    <hr>
+                                    
+                                    <!-- Total y fecha -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <strong>Total:</strong>
+                                        <strong class="text-primary" style="font-size: 1.2rem;">${{ info.pedido.total }}</strong>
+                                    </div>
+                                    <div class="text-muted small">
+                                        <i class="fas fa-calendar"></i> Fecha: {{ info.pedido.created|date:"d/m/Y H:i" }}
+                                    </div>
+                                    
+                                    <!-- Actualizar estado -->
+                                    <form method="post" action="{% url 'admin_pedido_actualizar' info.pedido.id %}" class="mt-3">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <select name="status" class="form-select">
+                                                <option value="pending" {% if info.pedido.status == 'pending' %}selected{% endif %}>Pendiente</option>
+                                                <option value="confirmed" {% if info.pedido.status == 'confirmed' %}selected{% endif %}>Confirmado</option>
+                                                <option value="completed" {% if info.pedido.status == 'completed' %}selected{% endif %}>Completado</option>
+                                                <option value="cancelled" {% if info.pedido.status == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> Actualizar
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> No hay pedidos con el estado seleccionado.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

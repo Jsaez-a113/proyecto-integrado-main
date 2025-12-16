@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceso prohibido - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-lock text-warning" style="font-size: 6rem;"></i>
+                    </div>
+                    <h1 class="display-1 fw-bold text-warning mb-3">403</h1>
+                    <h2 class="mb-4">Acceso prohibido</h2>
+                    <p class="lead text-muted mb-4">
+                        No tienes permiso para acceder a esta página. Por favor, inicia sesión con una cuenta autorizada.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-home"></i> Ir al Inicio
+                        </a>
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .main-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+

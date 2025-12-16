@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                    </div>
+                    <h3>{{ user.get_full_name|default:user.username }}</h3>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <hr>
+                    <p><strong>Usuario:</strong> {{ user.username }}</p>
+                    <p><strong>Miembro desde:</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-history"></i> Historial de Compras
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if orders %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Orden #</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                        <tr>
+                                            <td>#{{ order.id }}</td>
+                                            <td>{{ order.created|date:"d/m/Y H:i" }}</td>
+                                            <td>${{ order.total|floatformat:0 }}</td>
+                                            <td>
+                                                <span class="badge 
+                                                    {% if order.status == 'completed' %}bg-success
+                                                    {% elif order.status == 'confirmed' %}bg-primary
+                                                    {% elif order.status == 'cancelled' %}bg-danger
+                                                    {% else %}bg-warning{% endif %}">
+                                                    {{ order.get_status_display }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#orderModal{{ order.id }}">
+                                                    <i class="fas fa-eye"></i> Ver Detalles
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Modal para detalles de orden -->
+                                        <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Orden #{{ order.id }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><strong>Fecha:</strong> {{ order.created|date:"d/m/Y H:i" }}</p>
+                                                        <p><strong>Estado:</strong> {{ order.get_status_display }}</p>
+                                                        <hr>
+                                                        <h6>Productos:</h6>
+                                                        <ul class="list-unstyled">
+                                                            {% for item in order.items.all %}
+                                                                <li class="mb-2">
+                                                                    {{ item.product_name }} 
+                                                                    x{{ item.quantity }} 
+                                                                    - ${{ item.get_total|floatformat:0 }}
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                        <hr>
+                                                        <p class="mb-0">
+                                                            <strong>Total: ${{ order.total|floatformat:0 }}</strong>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Aún no has realizado ninguna compra.</p>
+                            <a href="{% url 'catalogo' %}" class="btn btn-primary">
+                                <i class="fas fa-shopping-bag"></i> Explorar Productos
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

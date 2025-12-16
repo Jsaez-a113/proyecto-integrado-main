@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if servicio %}Editar{% else %}Nuevo{% endif %} Servicio Terapéutico - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-{% if servicio %}edit{% else %}plus{% endif %}"></i> 
+                        {% if servicio %}Editar Servicio{% else %}Nuevo Servicio{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título del Servicio *</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" 
+                                   value="{% if servicio %}{{ servicio.titulo }}{% endif %}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción *</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="5" required>{% if servicio %}{{ servicio.descripcion }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="icono" class="form-label">Icono</label>
+                                <input type="hidden" id="icono" name="icono" 
+                                       value="{% if servicio %}{{ servicio.icono }}{% else %}fas fa-spa{% endif %}" required>
+                                <input type="hidden" id="color_icono" name="color_icono" 
+                                       value="{% if servicio %}{{ servicio.color_icono }}{% else %}#667eea{% endif %}">
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    <div class="border rounded p-3 text-center" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                                        <i class="{% if servicio %}{{ servicio.icono }}{% else %}fas fa-spa{% endif %}" id="icono-preview" data-color="{% if servicio %}{{ servicio.color_icono }}{% else %}#667eea{% endif %}" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#iconSelectorModal" style="width: 100%;">
+                                            <i class="fas fa-search"></i> Seleccionar Icono
+                                        </button>
+                                        <input type="color" class="form-control form-control-color" id="colorPicker" 
+                                               value="{% if servicio %}{{ servicio.color_icono }}{% else %}#667eea{% endif %}" 
+                                               title="Elegir color del icono" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="orden" class="form-label">Orden de Visualización</label>
+                                <input type="number" class="form-control" id="orden" name="orden" 
+                                       min="1" value="{% if servicio %}{{ servicio.orden }}{% else %}{% endif %}" 
+                                       placeholder="{% if not servicio %}Se asignará automáticamente{% endif %}">
+                                <small class="text-muted">
+                                    {% if servicio %}
+                                        Número de orden (1, 2, 3...). Si el orden ya existe, se reorganizará automáticamente.
+                                    {% else %}
+                                        Opcional: número de orden (1, 2, 3...). Si no se especifica, se asignará automáticamente.
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="items_texto" class="form-label">Características del Servicio (una por línea)</label>
+                            <textarea class="form-control" id="items_texto" name="items_texto" rows="6" 
+                                      placeholder="Duración: 60 minutos&#10;Reduce el estrés&#10;Mejora la circulación">{% if items_texto %}{{ items_texto }}{% endif %}</textarea>
+                            <small class="text-muted">Escribe cada característica en una línea separada. Ejemplo: "Duración: 60 minutos"</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="activo" name="activo" 
+                                       {% if not servicio or servicio.activo %}checked{% endif %}>
+                                <label class="form-check-label" for="activo">
+                                    Servicio Activo (mostrar en la página)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'admin_servicios_lista' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Selector de Iconos -->
+<div class="modal fade" id="iconSelectorModal" tabindex="-1" aria-labelledby="iconSelectorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="iconSelectorModalLabel">
+                    <i class="fas fa-icons"></i> Seleccionar Icono
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="iconSearch" class="form-label">Buscar icono:</label>
+                    <input type="text" class="form-control" id="iconSearch" placeholder="Buscar icono...">
+                </div>
+                <div class="mb-3">
+                    <label for="colorPickerModal" class="form-label">Color del icono:</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="color" class="form-control form-control-color" id="colorPickerModal" 
+                               value="{% if servicio %}{{ servicio.color_icono }}{% else %}#667eea{% endif %}" 
+                               title="Elegir color del icono">
+                        <input type="text" class="form-control" id="colorHex" 
+                               value="{% if servicio %}{{ servicio.color_icono }}{% else %}#667eea{% endif %}" 
+                               placeholder="#667eea" maxlength="7" style="max-width: 120px;">
+                    </div>
+                </div>
+                <div id="iconGrid" style="max-height: 400px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;">
+                    <!-- Los iconos se cargarán aquí con JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Lista de iconos relevantes para servicios terapéuticos y bienestar
+    const iconos = [
+        // Terapias y masajes
+        'fas fa-spa', 'fas fa-hands', 'fas fa-hand-holding-heart', 'fas fa-hand-holding', 
+        'fas fa-hands-helping', 'fas fa-hands-praying', 'fas fa-hand-sparkles',
+        
+        // Naturaleza y bienestar
+        'fas fa-leaf', 'fas fa-seedling', 'fas fa-tree', 'fas fa-mountain',
+        'fas fa-water', 'fas fa-wave-square', 'fas fa-sun', 'fas fa-moon', 'fas fa-star',
+        'fas fa-rainbow', 'fas fa-feather', 'fas fa-dove',
+        
+        // Elementos
+        'fas fa-fire', 'fas fa-wind', 'fas fa-snowflake', 'fas fa-cloud',
+        
+        // Salud y medicina
+        'fas fa-heart', 'fas fa-heartbeat', 'fas fa-lungs', 'fas fa-brain',
+        'fas fa-user-md', 'fas fa-stethoscope', 'fas fa-pills', 'fas fa-first-aid',
+        'fas fa-thermometer-half', 'fas fa-clinic-medical',
+        
+        // Relajación y spa
+        'fas fa-hot-tub', 'fas fa-swimming-pool', 'fas fa-shower', 'fas fa-bath',
+        'fas fa-soap', 'fas fa-spray-can', 'fas fa-pump-soap',
+        
+        // Espiritualidad y energía
+        'fas fa-peace', 'fas fa-om', 'fas fa-yin-yang', 'fas fa-infinity',
+        'fas fa-star-and-crescent',
+        
+        // Símbolos positivos
+        'fas fa-certificate', 'fas fa-award', 'fas fa-medal', 'fas fa-trophy',
+        'fas fa-gem', 'fas fa-crown', 'fas fa-magic', 'fas fa-wand-magic-sparkles',
+        
+        // Otros útiles
+        'fas fa-circle', 'fas fa-dot-circle', 'fas fa-book', 'fas fa-book-open',
+        'fas fa-scroll', 'fas fa-palette', 'fas fa-paint-brush'
+    ];
+
+    // Filtrar iconos únicos
+    const iconosUnicos = [...new Set(iconos)];
+
+    // Aplicar color inicial desde data-color
+    document.addEventListener('DOMContentLoaded', function() {
+        const preview = document.getElementById('icono-preview');
+        if (preview && preview.dataset.color) {
+            preview.style.color = preview.dataset.color;
+        }
+    });
+
+    // Obtener el color actual del selector
+    function getCurrentColor() {
+        return document.getElementById('colorPickerModal').value;
+    }
+    
+    // Actualizar preview del icono
+    function updateIconPreview() {
+        const icono = document.getElementById('icono').value;
+        const color = document.getElementById('color_icono').value;
+        const preview = document.getElementById('icono-preview');
+        preview.className = icono;
+        preview.style.fontSize = '2.5rem';
+        preview.style.color = color;
+    }
+    
+    // Función para renderizar iconos
+    function renderIconos(iconosList) {
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = '';
+        const currentColor = getCurrentColor();
+        
+        iconosList.forEach(icono => {
+            const div = document.createElement('div');
+            div.className = 'icon-item text-center p-2 border rounded cursor-pointer';
+            div.style.cursor = 'pointer';
+            div.style.transition = 'all 0.2s';
+            div.innerHTML = `
+                <i class="${icono}" style="font-size: 2rem; color: ${currentColor};"></i>
+                <div class="small mt-1 text-muted">${icono.replace('fas fa-', '')}</div>
+            `;
+            
+            div.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f0f0f0';
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            div.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+                this.style.transform = '';
+            });
+            
+            div.addEventListener('click', function() {
+                document.getElementById('icono').value = icono;
+                const color = getCurrentColor();
+                document.getElementById('color_icono').value = color;
+                updateIconPreview();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('iconSelectorModal'));
+                modal.hide();
+            });
+            
+            grid.appendChild(div);
+        });
+    }
+
+    // Búsqueda de iconos
+    document.getElementById('iconSearch').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = iconosUnicos.filter(icono => 
+            icono.toLowerCase().includes(searchTerm)
+        );
+        renderIconos(filtered);
+    });
+
+    // Selector de color en el modal
+    const colorPickerModal = document.getElementById('colorPickerModal');
+    const colorHex = document.getElementById('colorHex');
+    
+    colorPickerModal.addEventListener('input', function() {
+        colorHex.value = this.value.toUpperCase();
+        renderIconos(iconosUnicos.filter(icono => 
+            icono.toLowerCase().includes(document.getElementById('iconSearch').value.toLowerCase())
+        ));
+    });
+    
+    colorHex.addEventListener('input', function() {
+        let value = this.value;
+        if (!value.startsWith('#')) {
+            value = '#' + value;
+        }
+        if (/^#[0-9A-F]{6}$/i.test(value)) {
+            colorPickerModal.value = value;
+            renderIconos(iconosUnicos.filter(icono => 
+                icono.toLowerCase().includes(document.getElementById('iconSearch').value.toLowerCase())
+            ));
+        }
+    });
+    
+    // Selector de color principal (fuera del modal)
+    const colorPicker = document.getElementById('colorPicker');
+    colorPicker.addEventListener('input', function() {
+        document.getElementById('color_icono').value = this.value;
+        updateIconPreview();
+    });
+
+    // Cargar iconos al abrir el modal
+    document.getElementById('iconSelectorModal').addEventListener('show.bs.modal', function() {
+        // Sincronizar el color del modal con el color actual
+        const currentColor = document.getElementById('color_icono').value;
+        colorPickerModal.value = currentColor;
+        colorHex.value = currentColor.toUpperCase();
+        renderIconos(iconosUnicos);
+        document.getElementById('iconSearch').value = '';
+    });
+</script>
+{% endblock %}
+

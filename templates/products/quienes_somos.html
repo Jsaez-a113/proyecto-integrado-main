@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Quienes Somos - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h1 class="text-center mb-4">
+                        <i class="{{ contenido.titulo_icono|default:'fas fa-leaf' }}" style="color: {{ contenido.titulo_icono_color|default:'#198754' }};"></i> {{ contenido.titulo }}
+                    </h1>
+                    
+                    {% if contenido.imagen_archivo or contenido.imagen_url %}
+                    <div class="text-center mb-5">
+                        <img src="{% if contenido.imagen_archivo %}{{ contenido.imagen_archivo.url }}{% else %}{{ contenido.imagen_url }}{% endif %}" 
+                             alt="Auka Terapias" 
+                             class="img-fluid rounded-circle mb-4" 
+                             style="width: 200px; height: 200px; object-fit: cover;">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <h3 class="text-primary mb-3">
+                            <i class="{{ contenido.historia_icono|default:'fas fa-seedling' }}" style="color: {{ contenido.historia_icono_color|default:'#0d6efd' }};"></i> {{ contenido.historia_titulo }}
+                        </h3>
+                        <div class="lead">
+                            {{ contenido.historia_texto|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-primary mb-3">
+                            <i class="{{ contenido.mision_icono|default:'fas fa-heart' }}" style="color: {{ contenido.mision_icono_color|default:'#dc3545' }};"></i> {{ contenido.mision_titulo }}
+                        </h3>
+                        <p>
+                            {{ contenido.mision_texto|linebreaks }}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-primary mb-3">
+                            <i class="{{ contenido.valores_icono|default:'fas fa-certificate' }}" style="color: {{ contenido.valores_icono_color|default:'#0d6efd' }};"></i> {{ contenido.valores_titulo }}
+                        </h3>
+                        <ul class="list-unstyled">
+                            {% for valor in valores_presentacion %}
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i> 
+                                <strong>{{ valor.titulo }}</strong>{% if valor.descripcion %}: {{ valor.descripcion }}{% endif %}
+                            </li>
+                            {% empty %}
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i> 
+                                <strong>100% Natural:</strong> Todos nuestros productos son completamente naturales
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i> 
+                                <strong>Cultivado con Amor:</strong> Cada planta es cuidada personalmente
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i> 
+                                <strong>Calidad Garantizada:</strong> Procesos artesanales y tradicionales
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i> 
+                                <strong>Atención Personalizada:</strong> Cuidamos de cada cliente
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <a href="{% url 'catalogo' %}" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-shopping-bag"></i> Ver Productos
+                        </a>
+                        <a href="{% url 'servicios_terapeuticos' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-spa"></i> Nuestros Servicios
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,422 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Quienes Somos - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-edit"></i> Editar Contenido: Quienes Somos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-6">
+                                <label for="titulo" class="form-label">Título Principal</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" 
+                                       value="{{ contenido.titulo }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Icono y color</label>
+                                <input type="hidden" id="titulo_icono" name="titulo_icono" value="{{ contenido.titulo_icono }}">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="border rounded p-3 text-center" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                                        <i id="titulo-icon-preview" class="{{ contenido.titulo_icono }}" style="font-size: 2.5rem; color: {{ contenido.titulo_icono_color }};"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <button type="button" class="btn btn-outline-primary w-100 icon-selector-trigger" 
+                                                data-bs-toggle="modal" data-bs-target="#iconSelectorModal"
+                                                data-icon-input="titulo_icono"
+                                                data-color-input="titulo_icono_color"
+                                                data-preview-target="titulo-icon-preview">
+                                            <i class="fas fa-icons"></i> Seleccionar Icono
+                                        </button>
+                                        <label class="form-label small mt-2 mb-1" for="titulo_icono_color">Color del icono</label>
+                                        <input type="color" class="form-control form-control-color icon-color-input" 
+                                               id="titulo_icono_color" name="titulo_icono_color"
+                                               value="{{ contenido.titulo_icono_color }}" 
+                                               data-preview-target="titulo-icon-preview" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Imagen Principal</label>
+                            <div class="mb-2">
+                                <input type="file" class="form-control" id="imagen_archivo" name="imagen_archivo" accept="image/*">
+                                <small class="text-muted">O ingresa una URL de imagen:</small>
+                            </div>
+                            <input type="url" class="form-control" id="imagen_url" name="imagen_url" 
+                                   value="{% if contenido.imagen_url %}{{ contenido.imagen_url }}{% endif %}" 
+                                   placeholder="https://ejemplo.com/imagen.jpg">
+                            {% if contenido.imagen_archivo %}
+                                <small class="text-muted">Imagen actual: <a href="{{ contenido.imagen_archivo.url }}" target="_blank">{{ contenido.imagen_archivo.name }}</a></small>
+                            {% endif %}
+                        </div>
+                        
+                        <hr>
+                        
+                        <h5 class="mb-3">Sección: Nuestra Historia</h5>
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-6">
+                                <label for="historia_titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="historia_titulo" name="historia_titulo" 
+                                       value="{{ contenido.historia_titulo }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Icono y color</label>
+                                <input type="hidden" id="historia_icono" name="historia_icono" value="{{ contenido.historia_icono }}">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="border rounded p-3 text-center" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                                        <i id="historia-icon-preview" class="{{ contenido.historia_icono }}" style="font-size: 2.5rem; color: {{ contenido.historia_icono_color }};"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <button type="button" class="btn btn-outline-primary w-100 icon-selector-trigger" 
+                                                data-bs-toggle="modal" data-bs-target="#iconSelectorModal"
+                                                data-icon-input="historia_icono"
+                                                data-color-input="historia_icono_color"
+                                                data-preview-target="historia-icon-preview">
+                                            <i class="fas fa-icons"></i> Seleccionar Icono
+                                        </button>
+                                        <label class="form-label small mt-2 mb-1" for="historia_icono_color">Color del icono</label>
+                                        <input type="color" class="form-control form-control-color icon-color-input" 
+                                               id="historia_icono_color" name="historia_icono_color"
+                                               value="{{ contenido.historia_icono_color }}" 
+                                               data-preview-target="historia-icon-preview" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="historia_texto" class="form-label">Texto</label>
+                            <textarea class="form-control" id="historia_texto" name="historia_texto" rows="5">{{ contenido.historia_texto }}</textarea>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h5 class="mb-3">Sección: Nuestra Misión</h5>
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-6">
+                                <label for="mision_titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="mision_titulo" name="mision_titulo" 
+                                       value="{{ contenido.mision_titulo }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Icono y color</label>
+                                <input type="hidden" id="mision_icono" name="mision_icono" value="{{ contenido.mision_icono }}">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="border rounded p-3 text-center" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                                        <i id="mision-icon-preview" class="{{ contenido.mision_icono }}" style="font-size: 2.5rem; color: {{ contenido.mision_icono_color }};"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <button type="button" class="btn btn-outline-primary w-100 icon-selector-trigger" 
+                                                data-bs-toggle="modal" data-bs-target="#iconSelectorModal"
+                                                data-icon-input="mision_icono"
+                                                data-color-input="mision_icono_color"
+                                                data-preview-target="mision-icon-preview">
+                                            <i class="fas fa-icons"></i> Seleccionar Icono
+                                        </button>
+                                        <label class="form-label small mt-2 mb-1" for="mision_icono_color">Color del icono</label>
+                                        <input type="color" class="form-control form-control-color icon-color-input" 
+                                               id="mision_icono_color" name="mision_icono_color"
+                                               value="{{ contenido.mision_icono_color }}" 
+                                               data-preview-target="mision-icon-preview" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mision_texto" class="form-label">Texto</label>
+                            <textarea class="form-control" id="mision_texto" name="mision_texto" rows="5">{{ contenido.mision_texto }}</textarea>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h5 class="mb-3">Sección: Nuestros Valores</h5>
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-6">
+                                <label for="valores_titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="valores_titulo" name="valores_titulo" 
+                                       value="{{ contenido.valores_titulo }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Icono y color</label>
+                                <input type="hidden" id="valores_icono" name="valores_icono" value="{{ contenido.valores_icono }}">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="border rounded p-3 text-center" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                                        <i id="valores-icon-preview" class="{{ contenido.valores_icono }}" style="font-size: 2.5rem; color: {{ contenido.valores_icono_color }};"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <button type="button" class="btn btn-outline-primary w-100 icon-selector-trigger" 
+                                                data-bs-toggle="modal" data-bs-target="#iconSelectorModal"
+                                                data-icon-input="valores_icono"
+                                                data-color-input="valores_icono_color"
+                                                data-preview-target="valores-icon-preview">
+                                            <i class="fas fa-icons"></i> Seleccionar Icono
+                                        </button>
+                                        <label class="form-label small mt-2 mb-1" for="valores_icono_color">Color del icono</label>
+                                        <input type="color" class="form-control form-control-color icon-color-input" 
+                                               id="valores_icono_color" name="valores_icono_color"
+                                               value="{{ contenido.valores_icono_color }}" 
+                                               data-preview-target="valores-icon-preview" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Valores destacados</label>
+                            <div id="valores-list">
+                                {% for valor in valores_form %}
+                                <div class="valor-item border rounded p-3 mb-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-5">
+                                            <label class="form-label">Título</label>
+                                            <input type="text" class="form-control" name="valor_titulo[]" value="{{ valor.titulo }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Descripción</label>
+                                            <input type="text" class="form-control" name="valor_descripcion[]" value="{{ valor.descripcion }}">
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-outline-danger w-100 remove-valor" title="Eliminar valor">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="valor-item border rounded p-3 mb-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-5">
+                                            <label class="form-label">Título</label>
+                                            <input type="text" class="form-control" name="valor_titulo[]">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Descripción</label>
+                                            <input type="text" class="form-control" name="valor_descripcion[]">
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-outline-danger w-100 remove-valor" title="Eliminar valor">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="btn btn-outline-success" id="add-valor-btn">
+                                <i class="fas fa-plus"></i> Agregar valor
+                            </button>
+                            <small class="text-muted d-block mt-2">Puedes agregar tantos valores como necesites. Cada valor se mostrará con un check y el título en negrita.</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'admin_panel' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const iconCatalog = [
+        'fas fa-spa', 'fas fa-hands', 'fas fa-hand-holding-heart', 'fas fa-hand-holding',
+        'fas fa-hands-helping', 'fas fa-hands-praying', 'fas fa-hand-sparkles',
+        'fas fa-leaf', 'fas fa-seedling', 'fas fa-tree', 'fas fa-mountain',
+        'fas fa-water', 'fas fa-wave-square', 'fas fa-sun', 'fas fa-moon', 'fas fa-star',
+        'fas fa-rainbow', 'fas fa-feather', 'fas fa-dove',
+        'fas fa-fire', 'fas fa-wind', 'fas fa-snowflake', 'fas fa-cloud',
+        'fas fa-heart', 'fas fa-heartbeat', 'fas fa-lungs', 'fas fa-brain',
+        'fas fa-user-md', 'fas fa-stethoscope', 'fas fa-pills', 'fas fa-first-aid',
+        'fas fa-thermometer-half', 'fas fa-clinic-medical',
+        'fas fa-hot-tub', 'fas fa-swimming-pool', 'fas fa-shower', 'fas fa-bath',
+        'fas fa-peace', 'fas fa-om', 'fas fa-yin-yang', 'fas fa-infinity',
+        'fas fa-star-and-crescent', 'fas fa-award', 'fas fa-medal', 'fas fa-trophy',
+        'fas fa-gem', 'fas fa-crown', 'fas fa-magic', 'fas fa-wand-magic-sparkles',
+        'fas fa-circle', 'fas fa-dot-circle', 'fas fa-book', 'fas fa-book-open',
+        'fas fa-scroll', 'fas fa-palette', 'fas fa-paint-brush', 'fas fa-check-circle'
+    ];
+    const uniqueIcons = [...new Set(iconCatalog)];
+    
+    let currentIconInput = null;
+    let currentColorInput = null;
+    let currentPreview = null;
+    
+    const iconGrid = document.createElement('div');
+    
+    function renderIconOptions(list) {
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = '';
+        const color = currentColorInput ? currentColorInput.value : '#667eea';
+        list.forEach(icon => {
+            const div = document.createElement('div');
+            div.className = 'icon-item text-center p-2 border rounded';
+            div.style.cursor = 'pointer';
+            div.innerHTML = `
+                <i class="${icon}" style="font-size: 2rem; color: ${color};"></i>
+                <div class="small mt-1 text-muted">${icon.replace('fas fa-', '')}</div>
+            `;
+            div.addEventListener('click', () => {
+                if (!currentIconInput || !currentPreview) {
+                    return;
+                }
+                currentIconInput.value = icon;
+                currentPreview.className = icon;
+                currentPreview.style.color = color;
+                const modal = bootstrap.Modal.getInstance(document.getElementById('iconSelectorModal'));
+                modal.hide();
+            });
+            grid.appendChild(div);
+        });
+    }
+    
+    document.querySelectorAll('.icon-selector-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentIconInput = document.getElementById(btn.dataset.iconInput);
+            currentColorInput = document.getElementById(btn.dataset.colorInput);
+            currentPreview = document.getElementById(btn.dataset.previewTarget);
+            const modalColorPicker = document.getElementById('iconColorPickerModal');
+            const modalColorHex = document.getElementById('iconColorHex');
+            const currentColor = currentColorInput ? currentColorInput.value : '#667eea';
+            modalColorPicker.value = currentColor;
+            modalColorHex.value = currentColor.toUpperCase();
+            renderIconOptions(uniqueIcons);
+            document.getElementById('iconSearch').value = '';
+        });
+    });
+    
+    document.querySelectorAll('.icon-color-input').forEach(input => {
+        input.addEventListener('input', () => {
+            const target = document.getElementById(input.dataset.previewTarget);
+            if (!target) return;
+            target.style.color = input.value;
+        });
+    });
+    
+    document.getElementById('iconSearch').addEventListener('input', e => {
+        const term = e.target.value.toLowerCase();
+        const filtered = uniqueIcons.filter(icon => icon.toLowerCase().includes(term));
+        renderIconOptions(filtered);
+    });
+    
+    document.getElementById('iconColorPickerModal').addEventListener('input', function () {
+        document.getElementById('iconColorHex').value = this.value.toUpperCase();
+        if (currentColorInput) {
+            currentColorInput.value = this.value;
+            currentPreview.style.color = this.value;
+        }
+        renderIconOptions(uniqueIcons.filter(icon => 
+            icon.toLowerCase().includes(document.getElementById('iconSearch').value.toLowerCase())
+        ));
+    });
+    
+    document.getElementById('iconColorHex').addEventListener('input', function () {
+        let value = this.value;
+        if (!value.startsWith('#')) {
+            value = '#' + value;
+        }
+        if (/^#[0-9A-F]{6}$/i.test(value)) {
+            document.getElementById('iconColorPickerModal').value = value;
+            if (currentColorInput) {
+                currentColorInput.value = value;
+                currentPreview.style.color = value;
+            }
+            renderIconOptions(uniqueIcons.filter(icon => 
+                icon.toLowerCase().includes(document.getElementById('iconSearch').value.toLowerCase())
+            ));
+        }
+    });
+    
+    // Modal setup
+    document.getElementById('iconSelectorModal').addEventListener('shown.bs.modal', () => {
+        renderIconOptions(uniqueIcons);
+    });
+    
+    // Valores dinámicos
+    const valoresList = document.getElementById('valores-list');
+    document.getElementById('add-valor-btn').addEventListener('click', () => {
+        const item = document.createElement('div');
+        item.className = 'valor-item border rounded p-3 mb-3';
+        item.innerHTML = `
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="valor_titulo[]">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-control" name="valor_descripcion[]">
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" class="btn btn-outline-danger w-100 remove-valor" title="Eliminar valor">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        valoresList.appendChild(item);
+    });
+    
+    valoresList.addEventListener('click', (event) => {
+        if (event.target.closest('.remove-valor')) {
+            const items = valoresList.querySelectorAll('.valor-item');
+            if (items.length === 1) {
+                // limpiar campos pero mantener último
+                const inputs = items[0].querySelectorAll('input');
+                inputs.forEach(input => input.value = '');
+                return;
+            }
+            event.target.closest('.valor-item').remove();
+        }
+    });
+</script>
+
+<!-- Modal reutilizable -->
+<div class="modal fade" id="iconSelectorModal" tabindex="-1" aria-labelledby="iconSelectorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="iconSelectorModalLabel">
+                    <i class="fas fa-icons"></i> Seleccionar Icono
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="iconSearch" class="form-label">Buscar icono</label>
+                    <input type="text" class="form-control" id="iconSearch" placeholder="Busca por nombre (ej: leaf, heart, spa)">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Color del icono</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="color" class="form-control form-control-color" id="iconColorPickerModal" value="#667eea" title="Elegir color">
+                        <input type="text" class="form-control" id="iconColorHex" placeholder="#667EEA" maxlength="7" style="max-width: 120px;">
+                    </div>
+                </div>
+                <div id="iconGrid" style="max-height: 400px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

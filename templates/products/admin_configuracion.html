@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Configuración del Sitio - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-cog"></i> Configuración del Sitio
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <h5 class="mb-3 mt-3">
+                            <i class="fas fa-globe text-primary"></i> Información General
+                        </h5>
+                        <hr>
+                        
+                        <div class="mb-3">
+                            <label for="nombre_navbar" class="form-label">
+                                <i class="fas fa-bars"></i> Nombre en la Barra Superior (Navbar) *
+                            </label>
+                            <input type="text" class="form-control" id="nombre_navbar" name="nombre_navbar" 
+                                   value="{{ configuracion.nombre_navbar }}" required
+                                   placeholder="AUKA">
+                            <small class="text-muted">Este es el nombre que aparece junto al icono en la barra superior del sitio</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="favicon" class="form-label">
+                                <i class="fas fa-image"></i> Icono de la Barra Superior (Navbar)
+                            </label>
+                            <input type="file" class="form-control" id="favicon" name="favicon" accept="image/*">
+                            <small class="text-muted">
+                                Imagen que aparece junto al nombre en la barra superior. Recomendado: imagen cuadrada de 32x32 píxeles (formato: .png, .jpg, .svg)
+                            </small>
+                            {% if configuracion.favicon %}
+                                <div class="mt-2">
+                                    <small class="text-muted d-block mb-2">Icono actual:</small>
+                                    <img src="{{ configuracion.favicon.url }}" alt="Icono navbar actual" 
+                                         style="width: 32px; height: 32px; border: 1px solid #dee2e6; border-radius: 4px; object-fit: contain;">
+                                    <small class="text-muted d-block mt-1">
+                                        <a href="{{ configuracion.favicon.url }}" target="_blank">Ver imagen completa</a>
+                                    </small>
+                                </div>
+                            {% else %}
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-info-circle"></i> No hay icono configurado actualmente. Se mostrará un icono por defecto (hoja).
+                                </small>
+                            {% endif %}
+                        </div>
+                        
+                        <h5 class="mb-3 mt-4">
+                            <i class="fas fa-info-circle text-success"></i> Footer
+                        </h5>
+                        <hr>
+                        
+                        <div class="mb-3">
+                            <label for="texto_footer" class="form-label">
+                                <i class="fas fa-align-left"></i> Texto del Footer *
+                            </label>
+                            <textarea class="form-control" id="texto_footer" name="texto_footer" rows="3" required>{{ configuracion.texto_footer }}</textarea>
+                            <small class="text-muted">Texto descriptivo que aparece en el footer del sitio</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="url_instagram" class="form-label">
+                                <i class="fab fa-instagram"></i> URL de Instagram
+                            </label>
+                            <input type="url" class="form-control" id="url_instagram" name="url_instagram" 
+                                   value="{{ configuracion.url_instagram }}" 
+                                   placeholder="https://www.instagram.com/auka_terapias/?hl=es">
+                            <small class="text-muted">URL completa del perfil de Instagram</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="url_whatsapp_footer" class="form-label">
+                                <i class="fab fa-whatsapp"></i> URL de WhatsApp (Footer)
+                            </label>
+                            <input type="url" class="form-control" id="url_whatsapp_footer" name="url_whatsapp_footer" 
+                                   value="{{ configuracion.url_whatsapp_footer }}" 
+                                   placeholder="https://wa.me/56985661992">
+                            <small class="text-muted">URL de WhatsApp para el footer (formato: https://wa.me/56985661992)</small>
+                        </div>
+                        
+                        <h5 class="mb-3 mt-4">
+                            <i class="fas fa-shopping-cart text-warning"></i> Pedidos
+                        </h5>
+                        <hr>
+                        
+                        <div class="mb-3">
+                            <label for="numero_pedidos" class="form-label">
+                                <i class="fas fa-phone"></i> Número de WhatsApp para Pedidos *
+                            </label>
+                            <input type="text" class="form-control" id="numero_pedidos" name="numero_pedidos" 
+                                   value="{{ configuracion.numero_pedidos }}" required
+                                   placeholder="+56985661992">
+                            <small class="text-muted">
+                                Número de WhatsApp al que se dirigirán los pedidos después del carrito de compra (formato: +56985661992)
+                            </small>
+                        </div>
+                        
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-lightbulb"></i> <strong>Nota:</strong> 
+                            Los cambios en la configuración se aplicarán inmediatamente en todo el sitio. 
+                            Asegúrate de guardar los cambios después de editarlos.
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'admin_panel' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Configuración
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

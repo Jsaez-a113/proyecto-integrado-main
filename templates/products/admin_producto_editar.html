@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if producto %}Editar{% else %}Nuevo{% endif %} Producto - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-{% if producto %}edit{% else %}plus{% endif %}"></i> 
+                        {% if producto %}Editar Producto{% else %}Nuevo Producto{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Producto *</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" 
+                                   value="{% if producto %}{{ producto.nombre }}{% endif %}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="beneficios" class="form-label">Beneficios *</label>
+                            <textarea class="form-control" id="beneficios" name="beneficios" rows="3" required>{% if producto %}{{ producto.beneficios }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción *</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required>{% if producto %}{{ producto.description }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="categorizacion" class="form-label">Categoría *</label>
+                                <select class="form-select" id="categorizacion" name="categorizacion" required>
+                                    <option value="medicinal" {% if producto and producto.categorizacion == 'medicinal' %}selected{% endif %}>Medicinal</option>
+                                    <option value="cosmetico" {% if producto and producto.categorizacion == 'cosmetico' %}selected{% endif %}>Cosmético</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="precio" class="form-label">Precio {% if not producto %}*{% endif %}</label>
+                                <input type="number" class="form-control" id="precio" name="precio" 
+                                       step="0.01" min="0" value="{% if producto %}{{ producto.precio }}{% endif %}" {% if not producto %}required{% endif %}>
+                                {% if producto %}
+                                    <small class="text-muted">Dejar vacío para mantener el precio actual: ${{ producto.precio }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="stock" class="form-label">Stock *</label>
+                                <input type="number" class="form-control" id="stock" name="stock" 
+                                       min="0" value="{% if producto %}{{ producto.stock }}{% endif %}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Imagen</label>
+                                <input type="file" class="form-control" id="img" name="img" accept="image/*">
+                                {% if producto and producto.img %}
+                                    <small class="text-muted">Imagen actual: <a href="{{ producto.img.url }}" target="_blank">{{ producto.img.name }}</a></small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="destacado" name="destacado" 
+                                       {% if producto and producto.destacado %}checked{% endif %}>
+                                <label class="form-check-label" for="destacado">
+                                    Producto Destacado
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="oculto" name="oculto" 
+                                       {% if producto and producto.oculto %}checked{% endif %}>
+                                <label class="form-check-label" for="oculto">
+                                    Ocultar Producto
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sin_stock" name="sin_stock" 
+                                       {% if producto and producto.sin_stock %}checked{% endif %}>
+                                <label class="form-check-label" for="sin_stock">
+                                    Sin Stock
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'admin_productos' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

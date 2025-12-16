@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Producto - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Eliminar Producto
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">¿Estás seguro de que deseas eliminar el siguiente producto?</p>
+                    
+                    <div class="alert alert-warning">
+                        <strong>{{ producto.nombre }}</strong><br>
+                        <small>Categoría: {{ producto.get_categorizacion_display }} | Precio: ${{ producto.precio|floatformat:0 }}</small>
+                    </div>
+                    
+                    <p class="text-danger"><strong>Esta acción no se puede deshacer.</strong></p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'admin_productos' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

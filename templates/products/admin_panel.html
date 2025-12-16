@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Administración - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-cog text-primary"></i> Panel de Administración
+            </h1>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-box text-primary" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Productos</h3>
+                    <p class="card-text">Administra tus productos: añadir, modificar, eliminar, destacar, ocultar, etc.</p>
+                    <a href="{% url 'admin_productos' %}" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> Gestionar Productos
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-alt text-success" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Contenido</h3>
+                    <p class="card-text">Edita el contenido de las páginas Quienes Somos y Servicios Terapéuticos.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'admin_contenido_quienes_somos' %}" class="btn btn-success">
+                            <i class="fas fa-edit"></i> Quienes Somos
+                        </a>
+                        <a href="{% url 'admin_contenido_servicios' %}" class="btn btn-success">
+                            <i class="fas fa-edit"></i> Servicios Terapéuticos (General)
+                        </a>
+                        <a href="{% url 'admin_servicios_lista' %}" class="btn btn-outline-success">
+                            <i class="fas fa-list"></i> Gestionar Bloques de Servicios
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-image text-info" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Foto de Bienvenida</h3>
+                    <p class="card-text">Edita la foto y texto de bienvenida en la página de inicio.</p>
+                    <a href="{% url 'admin_foto_bienvenida' %}" class="btn btn-info">
+                        <i class="fas fa-edit"></i> Editar Foto de Bienvenida
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4 mt-2">
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-shopping-cart text-warning" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Pedidos</h3>
+                    <p class="card-text">Gestiona los pedidos de los clientes: ver información del usuario, productos pedidos y actualizar estados.</p>
+                    <a href="{% url 'admin_pedidos' %}" class="btn btn-warning">
+                        <i class="fas fa-list"></i> Ver Pedidos
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-cogs text-secondary" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Configuración</h3>
+                    <p class="card-text">Configura aspectos generales del sitio: nombre del navegador, favicon, footer, redes sociales y número de pedidos.</p>
+                    <a href="{% url 'admin_configuracion' %}" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Configurar Sitio
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4"></div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

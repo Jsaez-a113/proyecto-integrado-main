@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Administrar Servicios Terapéuticos - Auka Terapias{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h1>
+                <i class="fas fa-spa text-success"></i> Administrar Servicios Terapéuticos
+            </h1>
+            <a href="{% url 'admin_servicio_nuevo' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Nuevo Servicio
+            </a>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                Aquí puedes gestionar los bloques de servicios que aparecen en la página de Servicios Terapéuticos.
+                También puedes <a href="{% url 'admin_contenido_servicios' %}" class="alert-link">editar el contenido general</a> de la página.
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    {% if servicios %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Orden</th>
+                                        <th>Icono</th>
+                                        <th>Título</th>
+                                        <th>Descripción</th>
+                                        <th>Items</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for servicio in servicios %}
+                                    <tr>
+                                        <td>{{ servicio.orden }}</td>
+                                        <td>
+                                            <i class="{{ servicio.icono }}" style="font-size: 1.5rem; color: {{ servicio.color_icono|default:'#667eea' }};"></i>
+                                        </td>
+                                        <td><strong>{{ servicio.titulo }}</strong></td>
+                                        <td>{{ servicio.descripcion|truncatewords:15 }}</td>
+                                        <td>
+                                            {% if servicio.items %}
+                                                <span class="badge bg-info">{{ servicio.items|length }} items</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Sin items</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if servicio.activo %}
+                                                <span class="badge bg-success">Activo</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex gap-2 justify-content-center">
+                                                <a href="{% url 'admin_servicio_editar' servicio.id %}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </a>
+                                                <a href="{% url 'admin_servicio_eliminar' servicio.id %}" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning text-center">
+                            <i class="fas fa-exclamation-triangle"></i> No hay servicios registrados. 
+                            <a href="{% url 'admin_servicio_nuevo' %}" class="alert-link">Crea el primero</a>.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{% url 'admin_panel' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Panel
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
