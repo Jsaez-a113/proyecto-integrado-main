@@ -159,6 +159,16 @@ LOGOUT_REDIRECT_URL = '/'
 # WhatsApp Configuration
 WHATSAPP_NUMBER = config('WHATSAPP_NUMBER', default='+56985661992')
 
+# CSRF Trusted Origins para Railway
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.up.railway.app',
+    'https://*.railway.app',
+]
+
+# Agregar dominios personalizados si existen
+if 'RAILWAY_PUBLIC_DOMAIN' in os.environ:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{os.environ['RAILWAY_PUBLIC_DOMAIN']}")
+
 # Security Settings para producción
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
